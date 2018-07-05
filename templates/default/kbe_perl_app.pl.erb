@@ -1,0 +1,36 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use LWP::UserAgent;
+use HTTP::Request::Common qw(GET);
+use Crypt::SSLeay;
+
+my $webreq = sub {
+  my $env = shift;
+  my $ua = LWP::UserAgent->new;
+
+  # Define user agent type
+  $ua->agent('Mozilla/8.0');
+
+  # Request object
+  my $req = GET 'https://lumindigital.com';
+
+  # Make the request
+  my $res = $ua->request($req);
+
+  # Display response
+  if ($res->is_success) {
+    return [
+      '200',
+      [ 'Content-Type' => 'text/html' ],
+      [ $res->content ],
+    ];
+  } 
+  else {
+    return [
+      $res->code,
+      [ 'Content-Type' => 'text/html' ],
+      [ $res->status_line ],
+    ];
+  }
+};
